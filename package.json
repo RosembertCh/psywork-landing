@@ -1,0 +1,11 @@
+{
+  "name": "kit-terapeutico",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node netlify/lib/probar.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}

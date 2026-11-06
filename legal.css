@@ -1,0 +1,13 @@
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:#ebeff5;color:rgba(36,36,38,.75);font-family:"Inter Display","Inter",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px;line-height:1.65;font-optical-sizing:auto;-webkit-font-smoothing:antialiased}
+main{width:min(820px,100% - 48px);margin:0 auto;padding:40px 0 80px}
+.back{display:inline-flex;align-items:center;height:40px;padding:0 18px;border-radius:12px;background:#fff;color:#242426;font-size:14px;text-decoration:none}
+.back:hover{background:rgba(36,36,38,.1)}
+.back:focus-visible{outline:2px solid #242426;outline-offset:3px}
+h1{margin:40px 0 0;font-size:clamp(36px,5vw,56px);font-weight:400;letter-spacing:-.04em;line-height:1.15;color:#242426}
+.date{margin:12px 0 0;font-size:14px;color:rgba(36,36,38,.5)}
+.frame{margin-top:40px;background:#fff;border-radius:24px;padding:clamp(24px,5vw,48px)}
+section + section{margin-top:32px;padding-top:32px;border-top:1px solid rgba(36,36,38,.1)}
+h2{margin:0;font-size:22px;font-weight:400;letter-spacing:-.02em;color:#242426}
+p{margin:12px 0 0;text-wrap:pretty}
+strong{font-weight:500;color:#242426}
