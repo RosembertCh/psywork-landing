@@ -364,8 +364,7 @@ footer .links a{text-decoration:underline;text-underline-offset:2px}
           <li>Plan de afrontamiento del estrés</li>
         </ul>
       </div>
-      <form class="lead-form" id="leadForm" name="guia-gratis" method="POST" data-netlify="true" netlify-honeypot="web" novalidate>
-        <input type="hidden" name="form-name" value="guia-gratis">
+      <form class="lead-form" id="leadForm" name="guia-gratis" method="POST" novalidate>
         <input type="hidden" name="origen" value="">
         <p hidden><label>No rellenar: <input name="web" tabindex="-1" autocomplete="off"></label></p>
         <h3>Descárgala al momento</h3>
@@ -577,8 +576,10 @@ footer .links a{text-decoration:underline;text-underline-offset:2px}
 document.documentElement.classList.add('js');
 
 /* ── Por configurar ──
+   LEAD_ENDPOINT: URL de la aplicación web de Google Apps Script (ver google-apps-script/README.md).
    LEAD_FILE: PDF con las 5 worksheets; se entrega al enviar el formulario.
    VIDEO_URL: si lo rellenas, aparece el botón de vídeo del hero. */
+const LEAD_ENDPOINT = '';
 const LEAD_FILE = 'descargas/5-worksheets.pdf';
 const VIDEO_URL = '';
 
@@ -586,7 +587,7 @@ const VIDEO_URL = '';
 const videoBtn = document.getElementById('videoBtn');
 if (VIDEO_URL) { videoBtn.hidden = false; videoBtn.addEventListener('click', () => open(VIDEO_URL, '_blank', 'noopener')); }
 
-/* ── Formulario de la guía gratuita (Netlify Forms guarda el contacto y avisa por email) ── */
+/* ── Formulario de la guía gratuita (Google Sheets guarda el contacto, envía la guía y te avisa) ── */
 const leadForm = document.getElementById('leadForm'), leadMsg = document.getElementById('leadMsg');
 leadForm.elements.origen.value = location.search.slice(1);
 function say(text, link) {
@@ -599,13 +600,20 @@ leadForm.addEventListener('submit', async e => {
   if (!leadForm.checkValidity()) { leadForm.reportValidity(); return; }
   const btn = leadForm.querySelector('button'); btn.disabled = true;
   try {
-    const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(leadForm)).toString() });
-    if (!res.ok) throw new Error(res.status);
+    if (!LEAD_ENDPOINT) throw new Error('LEAD_ENDPOINT sin configurar');
+    const res = await fetch(LEAD_ENDPOINT, { method: 'POST', body: new URLSearchParams(new FormData(leadForm)) });
+    const out = await res.json();
+    if (!out.ok) {
+      if (out.error === 'email') { say('Revisa el email: parece que no es válido.'); return; }
+      throw new Error('respuesta ' + JSON.stringify(out));
+    }
     leadForm.reset();
-    say('¡Listo! Tu guía está preparada.', LEAD_FILE);
+    say('¡Listo! Te la hemos enviado por email y también la tienes aquí:', LEAD_FILE);
     if (window.fbq) fbq('track', 'Lead');
-  } catch {
-    say('No se pudo enviar. Revisa tu conexión e inténtalo otra vez.');
+  } catch (err) {
+    /* Si el registro falla, la persona no se queda sin su guía. */
+    console.warn('No se pudo registrar el lead:', err);
+    say('Tu guía está lista:', LEAD_FILE);
   } finally { btn.disabled = false; }
 });
 
