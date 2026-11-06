@@ -8,7 +8,7 @@
 
 const CONFIG = {
   // Dirección pública de la web, sin barra final (GitHub Pages).
-  SITE: 'https://USUARIO.github.io/REPOSITORIO',
+  SITE: 'https://rosembertch.github.io/psywork-landing',
   CHECKOUT: 'https://pay.hotmart.com/Y106895319B?checkoutMode=10',
   REMITENTE: 'PsyWork',
   FIRMA: 'El equipo de PsyWork',
